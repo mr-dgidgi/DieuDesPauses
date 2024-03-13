@@ -231,7 +231,7 @@ Func_Tata () {
 	TataResult=$(yes_no_check $REPLY)
 	if [ $TataResult == 1 ]; then
 		Tata=-179
-	elif [ $PluieResult == 0 ]; then
+	elif [ $TataResult == 0 ]; then
 		Tata=179
 	else
 		Func_Tata
@@ -254,6 +254,44 @@ Func_Alexandre () {
 		Alexandre=179
 	else
 		Func_Alexandre
+	fi
+
+}
+
+Func_Dimitri () {
+
+	echo -e "#########################################"
+	echo -e "####  Est-ce que Dimitri est Là ?  ######"
+	echo -e "#########################################"
+	
+	read -r
+
+	DimitriResult=$(yes_no_check $REPLY)
+	if [ $DimitriResult == 1 ]; then
+		Dimitri=-205
+	elif [ $DimitriResult == 0 ]; then
+		Dimitri=105
+	else
+		Func_Dimitri
+	fi
+
+}
+
+Func_Monologue () {
+
+	echo -e "#########################################"
+	echo -e "# Est-il dans un monologue existenciel? #"
+	echo -e "#########################################"
+	
+	read -r
+
+	MonologueResult=$(yes_no_check $REPLY)
+	if [ $MonologueResult == 1 ]; then
+		Monologue=-205
+	elif [ $MonologueResult == 0 ]; then
+		Monologue=0
+	else
+		Func_Monologue
 	fi
 
 }
@@ -373,22 +411,29 @@ Func_Pluie
 Func_Date
 Func_Tata
 Func_Alexandre
-Func_Recup
+if [ $Aprem == 0 ];then
+	Func_Recup
+fi
 if [ $JourValue == "Tuesday" ] || [ $JourValue == "Friday" ]; then
 	Func_FriteBelge
 else
 	FriteBelge=0
 fi
+Func_Dimitri
+if [ $DimitriResult == 1 ]; then
+	Func_Monologue
+fi
 
-
-HeureMatin=$(($HeureMatin+$Absence+$Temperature+$Pluie+$Jour+$Mois+$Paire+$Tata+$Alexandre+$FriteBelge))
-HeureAprem=$(($HeureAprem+$Absence+$Temperature+$Pluie+$Jour+$Mois+$Paire+$Tata+$Alexandre+$FriteBelge+$Recup))
+HeureMatin=$(($HeureMatin+$Absence+$Temperature+$Pluie+$Jour+$Mois+$Paire+$Tata+$Alexandre+$FriteBelge+$Dimitri))
+HeureAprem=$(($HeureAprem+$Absence+$Temperature+$Pluie+$Jour+$Mois+$Paire+$Tata+$Alexandre+$FriteBelge+$Recup+$Dimitri))
 
 
 echo -e "##################################################"
 echo -e "################ Heure de Pause : ################"
 echo -e "##################################################"
-if [ $Aprem == 0 ];then
+if [ $MonologueResult == 1 ]; then
+	echo -e "Fuit pauvre fou !"
+elif [ $Aprem == 0 ];then
 	date -d@$HeureMatin -u +%H:%M
 	if [ $HeureActuelle -gt $HeureMatin ]; then
 		echo -e "T'es en retard couillon !!!"
