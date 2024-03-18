@@ -6,6 +6,7 @@ HeureMatin=37800 # 10h30
 HeureAprem=57600 # 16h00
 Absence=0
 Temperature=0
+MonologueResult=0
 
 
 ### Merci Chat GPT
