@@ -412,7 +412,7 @@ Func_Pluie
 Func_Date
 Func_Tata
 Func_Alexandre
-if [ $Aprem == 0 ];then
+if [ $Aprem == 1 ];then
 	Func_Recup
 fi
 if [ $JourValue == "Tuesday" ] || [ $JourValue == "Friday" ]; then
