@@ -464,7 +464,9 @@ if [ $DimitriResult == 1 ]; then
 	Func_Monologue
 fi
 
-Func_Random
+if [ $MonologueResult == 1 ]; then
+	Func_Random
+ fi
 
 HeureMatin=$(($HeureMatin+$Absence+$Temperature+$Pluie+$Jour+$Mois+$Paire+$Tata+$Alexandre+$Benjamin+$FriteBelge+$Dimitri+$Random))
 HeureAprem=$(($HeureAprem+$Absence+$Temperature+$Pluie+$Jour+$Mois+$Paire+$Tata+$Alexandre+$Benjamin+$Recup+$Dimitri+$Random))
