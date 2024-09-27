@@ -8,7 +8,6 @@ Absence=0
 Temperature=0
 MonologueResult=0
 
-
 ### Merci Chat GPT
 # Obtenez la date actuelle au format de secondes depuis l'époque (1970-01-01 00:00:00 UTC)
 current_time=$(date +%s)
@@ -259,6 +258,25 @@ Func_Alexandre () {
 
 }
 
+Func_Benjamin () {
+
+	echo -e "#########################################"
+	echo -e "####  Est-ce que Benjamin est Là ?  #####"
+	echo -e "#########################################"
+	
+	read -r
+
+	BenjaminResult=$(yes_no_check $REPLY)
+	if [ $BenjaminResult == 1 ]; then
+		Benjamin=265
+	elif [ $BenjaminResult == 0 ]; then
+		Benjamin=-265
+	else
+		Func_Benjamin
+	fi
+
+}
+
 Func_Dimitri () {
 
 	echo -e "#########################################"
@@ -348,13 +366,28 @@ Func_Recup () {
 
 	RecupResult=$(yes_no_check $REPLY)
 	if [ $RecupResult == 1 ]; then
-		Recup=-3400
+		Recup=-1200
 
 	elif [ $RecupResult == 0 ]; then
 		Recup=0
 	else
 		Func_Recup
 	fi
+
+}
+
+Func_Random () {
+
+	echo -e "#########################################"
+	echo -e "##############  Apagnan ? ###############"
+	echo -e "#########################################"
+	
+	read -r
+	
+	RandomResult=$(echo -n $REPLY | od -td1  | awk '{$1=""}1' | awk -F " " '{print $NF}')
+	RandomResult2=$(echo -n $REPLY | od -td1  | awk '{$1=""}1' | awk -F " " '{print $1}')
+	
+	Random=$(($RandomResult - $RandomResult2))
 
 }
 
@@ -412,21 +445,29 @@ Func_Pluie
 Func_Date
 Func_Tata
 Func_Alexandre
+Func_Benjamin
+
+
 if [ $Aprem == 1 ];then
 	Func_Recup
 fi
-if [ $JourValue == "Tuesday" ] || [ $JourValue == "Friday" ]; then
-	Func_FriteBelge
-else
-	FriteBelge=0
+
+if [ $Aprem == 0 ];then
+	if [ $JourValue == "Tuesday" ] || [ $JourValue == "Friday" ]; then
+		Func_FriteBelge
+	else
+		FriteBelge=0
+	fi
 fi
 Func_Dimitri
 if [ $DimitriResult == 1 ]; then
 	Func_Monologue
 fi
 
-HeureMatin=$(($HeureMatin+$Absence+$Temperature+$Pluie+$Jour+$Mois+$Paire+$Tata+$Alexandre+$FriteBelge+$Dimitri))
-HeureAprem=$(($HeureAprem+$Absence+$Temperature+$Pluie+$Jour+$Mois+$Paire+$Tata+$Alexandre+$FriteBelge+$Recup+$Dimitri))
+Func_Random
+
+HeureMatin=$(($HeureMatin+$Absence+$Temperature+$Pluie+$Jour+$Mois+$Paire+$Tata+$Alexandre+$Benjamin+$FriteBelge+$Dimitri+$Random))
+HeureAprem=$(($HeureAprem+$Absence+$Temperature+$Pluie+$Jour+$Mois+$Paire+$Tata+$Alexandre+$Benjamin+$Recup+$Dimitri+$Random))
 
 
 echo -e "##################################################"
