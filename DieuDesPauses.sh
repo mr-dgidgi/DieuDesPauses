@@ -1,5 +1,17 @@
 #!/bin/bash
 
+###################################################
+##
+##
+##    Dieu des Pauses
+##
+##
+##    Version : 5
+##
+## 
+##    contact : contact@dgidgi.ovh
+###################################################
+
 
 HeureMatin=37800 # 10h30
 
@@ -91,33 +103,75 @@ Func_Absence () {
 	fi
 }
 
+#Func_Temperature () {
+#
+#	echo -e "#########################################"
+#	echo -e "#####  Quelle température fait-il ?  ####"
+#	echo -e "#########################################"
+#
+#	read -r
+#
+#	if  ! test_integer $REPLY ; then
+#		if [ $REPLY -le 0 ]; then
+#			Temperature=-286
+#		elif [ $REPLY -le 5 ]; then
+#			Temperature=151
+#		elif [ $REPLY -le 10 ]; then
+#			Temperature=-242
+#		elif [ $REPLY -le 15 ]; then
+#			Temperature=-23
+#		elif [ $REPLY -le 20 ]; then
+#			Temperature=15
+#		elif [ $REPLY -le 30 ]; then
+#			Temperature=216
+#		else 
+#			Temperature=-231
+#		fi
+#	else
+#		Func_Temperature
+#
+#	fi
+#
+#}
+
 Func_Temperature () {
+	
+	# API key valable 3 ans
+	ApiKey='eyJ4NXQiOiJZV0kxTTJZNE1qWTNOemsyTkRZeU5XTTRPV014TXpjek1UVmhNbU14T1RSa09ETXlOVEE0Tnc9PSIsImtpZCI6ImdhdGV3YXlfY2VydGlmaWNhdGVfYWxpYXMiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJkZ2lkZ2lAY2FyYm9uLnN1cGVyIiwiYXBwbGljYXRpb24iOnsib3duZXIiOiJkZ2lkZ2kiLCJ0aWVyUXVvdGFUeXBlIjpudWxsLCJ0aWVyIjoiVW5saW1pdGVkIiwibmFtZSI6IkRlZmF1bHRBcHBsaWNhdGlvbiIsImlkIjoxOTExMywidXVpZCI6IjFkOTUyOWZkLTI4NTktNDlkMC04ZWVhLWIwZjM2YmYzOTE4MiJ9LCJpc3MiOiJodHRwczpcL1wvcG9ydGFpbC1hcGkubWV0ZW9mcmFuY2UuZnI6NDQzXC9vYXV0aDJcL3Rva2VuIiwidGllckluZm8iOnsiNTBQZXJNaW4iOnsidGllclF1b3RhVHlwZSI6InJlcXVlc3RDb3VudCIsImdyYXBoUUxNYXhDb21wbGV4aXR5IjowLCJncmFwaFFMTWF4RGVwdGgiOjAsInN0b3BPblF1b3RhUmVhY2giOnRydWUsInNwaWtlQXJyZXN0TGltaXQiOjAsInNwaWtlQXJyZXN0VW5pdCI6InNlYyJ9fSwia2V5dHlwZSI6IlBST0RVQ1RJT04iLCJzdWJzY3JpYmVkQVBJcyI6W3sic3Vic2NyaWJlclRlbmFudERvbWFpbiI6ImNhcmJvbi5zdXBlciIsIm5hbWUiOiJEb25uZWVzUHVibGlxdWVzT2JzZXJ2YXRpb24iLCJjb250ZXh0IjoiXC9wdWJsaWNcL0RQT2JzXC92MSIsInB1Ymxpc2hlciI6ImJhc3RpZW5nIiwidmVyc2lvbiI6InYxIiwic3Vic2NyaXB0aW9uVGllciI6IjUwUGVyTWluIn1dLCJleHAiOjE4MjM4Mzk2OTAsInRva2VuX3R5cGUiOiJhcGlLZXkiLCJpYXQiOjE3MjkxNjY4OTAsImp0aSI6ImFlYTgzYmJmLTAxOTAtNGRkNS1hYjY2LTBhMjlhMmQ5M2RjNSJ9.IGOi2e9SKSMt2yuYjhkdp76I8ghDmbDNER9TVksY5RSgQzqnU_CcPNBT60Q7t7wNgY39cuBIe2hohVasop9eVseIcTvKUYV9921ysqdxxRVvcy6TOYank8Of4sJN391NqtMdzRMfwcJXJ7eG-Lk4KiATPxev33fZZPpiwd-iRuSKADA16V-Xr6NzM-_bfZwGX1tOEr9DOYGHKK9DuWqJRar4vOrT8WNRLjIKhY3xo1sqW2eAmWjLLr5VI_7nfssfdXTmD2Pjk-FhAEDpc4gTU3xPcOLqvwHkhY4poA4VINq2HzOEpxRnQXhsxx90O8xAu93DxTDS5plSmieP1_olwQ=='
 
-	echo -e "#########################################"
-	echo -e "#####  Quelle température fait-il ?  ####"
-	echo -e "#########################################"
+	#problème d'optention de data sur l'api de temps à autre donc loop
+	i=0
+	while [[ $i < 5 ]] ; do	
+		TempK=$(curl -s -m10  -X 'GET' 'https://public-api.meteofrance.fr/public/DPObs/v1/station/horaire?id_station=86027001&format=json' -H 'accept: */*' -H "apikey: $ApiKey" | jq .[].t | awk -F "." '{print $1}')
+		# conversion Kelvin => Celcius
+		TempC=$(($TempK-273))
 
-	read -r
-
-	if  ! test_integer $REPLY ; then
-		if [ $REPLY -le 0 ]; then
-			Temperature=-286
-		elif [ $REPLY -le 5 ]; then
-			Temperature=151
-		elif [ $REPLY -le 10 ]; then
-			Temperature=-242
-		elif [ $REPLY -le 15 ]; then
-			Temperature=-23
-		elif [ $REPLY -le 20 ]; then
-			Temperature=15
-		elif [ $REPLY -le 30 ]; then
-			Temperature=216
-		else 
-			Temperature=-231
+		if [[ -n $TempK ]]; then
+			i=5
 		fi
-	else
-		Func_Temperature
 
+	done
+	if [ $TempC -le 0 ]; then
+		Temperature=-286
+		TempComment="Il pelle sa mère"
+	elif [ $TempC -le 5 ]; then
+		Temperature=151
+		TempComment="On se caille les miches"
+	elif [ $TempC -le 10 ]; then
+		Temperature=-242
+		TempComment="Fait pas chaud hein ?"
+	elif [ $TempC -le 15 ]; then
+		Temperature=-23
+		TempComment="Une petite rayée de soleil ?"
+	elif [ $TempC -le 20 ]; then
+		Temperature=15
+		TempComment="On est bien là !"
+	elif [ $TempC -le 30 ]; then
+		Temperature=216
+		TempComment="La clim c'est pratique"
+	else 
+		Temperature=-231
+		TempComment="Gros je suis bourré, j'ai aucune idée de la température"
 	fi
 
 }
@@ -464,9 +518,7 @@ if [ $DimitriResult == 1 ]; then
 	Func_Monologue
 fi
 
-if [ $MonologueResult == 1 ]; then
-	Func_Random
- fi
+Func_Random
 
 HeureMatin=$(($HeureMatin+$Absence+$Temperature+$Pluie+$Jour+$Mois+$Paire+$Tata+$Alexandre+$Benjamin+$FriteBelge+$Dimitri+$Random))
 HeureAprem=$(($HeureAprem+$Absence+$Temperature+$Pluie+$Jour+$Mois+$Paire+$Tata+$Alexandre+$Benjamin+$Recup+$Dimitri+$Random))
@@ -488,3 +540,5 @@ else
 		echo -e "T'es en retard couillon !!!"
 	fi
 fi
+echo "Il fait actuellement : " $TempC " °C"
+echo "le commentaire d'Evelyne Dhéliat : " $TempComment
